@@ -36,6 +36,7 @@ type (
 		MaxWalkedFiles        int                    `json:"max_walked_files,omitempty"`
 		TrashRetention        int                    `json:"trash_retention,omitempty"`
 		RedirectedSource      bool                   `json:"redirected_source,omitempty"`
+		Pined                 []PinedFile            `json:"pined,omitempty"`
 	}
 
 	// PolicySetting 非公有的存储策略属性

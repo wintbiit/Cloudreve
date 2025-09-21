@@ -2,6 +2,7 @@ package user
 
 import (
 	"fmt"
+	"slices"
 	"time"
 
 	"github.com/cloudreve/Cloudreve/v4/ent"
@@ -165,7 +166,7 @@ func BuildUser(user *ent.User, idEncoder hashid.Encoder) User {
 		PreferredTheme:      user.Settings.PreferredTheme,
 		Anonymous:           user.ID == 0,
 		Group:               BuildGroup(user.Edges.Group, idEncoder),
-		Pined:               user.Settings.Pined,
+		Pined:               lo.Uniq(slices.Concat(user.Settings.Pined, user.Edges.Group.Settings.Pined)),
 		Language:            user.Settings.Language,
 		DisableViewSync:     user.Settings.DisableViewSync,
 		ShareLinksInProfile: user.Settings.ShareLinksInProfile,
