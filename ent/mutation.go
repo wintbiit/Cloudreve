@@ -5687,6 +5687,7 @@ type MembershipMutation struct {
 	config
 	op            Op
 	typ           string
+	is_primary    *bool
 	created_at    *time.Time
 	expires_at    *time.Time
 	clearedFields map[string]struct{}
@@ -5773,6 +5774,38 @@ func (m *MembershipMutation) GroupID() (r int, exists bool) {
 // ResetGroupID resets all changes to the "group_id" field.
 func (m *MembershipMutation) ResetGroupID() {
 	m.group = nil
+}
+
+// SetIsPrimary sets the "is_primary" field.
+func (m *MembershipMutation) SetIsPrimary(b bool) {
+	m.is_primary = &b
+}
+
+// IsPrimary returns the value of the "is_primary" field in the mutation.
+func (m *MembershipMutation) IsPrimary() (r bool, exists bool) {
+	v := m.is_primary
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ClearIsPrimary clears the value of the "is_primary" field.
+func (m *MembershipMutation) ClearIsPrimary() {
+	m.is_primary = nil
+	m.clearedFields[membership.FieldIsPrimary] = struct{}{}
+}
+
+// IsPrimaryCleared returns if the "is_primary" field was cleared in this mutation.
+func (m *MembershipMutation) IsPrimaryCleared() bool {
+	_, ok := m.clearedFields[membership.FieldIsPrimary]
+	return ok
+}
+
+// ResetIsPrimary resets all changes to the "is_primary" field.
+func (m *MembershipMutation) ResetIsPrimary() {
+	m.is_primary = nil
+	delete(m.clearedFields, membership.FieldIsPrimary)
 }
 
 // SetCreatedAt sets the "created_at" field.
@@ -5914,12 +5947,15 @@ func (m *MembershipMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *MembershipMutation) Fields() []string {
-	fields := make([]string, 0, 4)
+	fields := make([]string, 0, 5)
 	if m.user != nil {
 		fields = append(fields, membership.FieldUserID)
 	}
 	if m.group != nil {
 		fields = append(fields, membership.FieldGroupID)
+	}
+	if m.is_primary != nil {
+		fields = append(fields, membership.FieldIsPrimary)
 	}
 	if m.created_at != nil {
 		fields = append(fields, membership.FieldCreatedAt)
@@ -5939,6 +5975,8 @@ func (m *MembershipMutation) Field(name string) (ent.Value, bool) {
 		return m.UserID()
 	case membership.FieldGroupID:
 		return m.GroupID()
+	case membership.FieldIsPrimary:
+		return m.IsPrimary()
 	case membership.FieldCreatedAt:
 		return m.CreatedAt()
 	case membership.FieldExpiresAt:
@@ -5972,6 +6010,13 @@ func (m *MembershipMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetGroupID(v)
+		return nil
+	case membership.FieldIsPrimary:
+		v, ok := value.(bool)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetIsPrimary(v)
 		return nil
 	case membership.FieldCreatedAt:
 		v, ok := value.(time.Time)
@@ -6020,6 +6065,9 @@ func (m *MembershipMutation) AddField(name string, value ent.Value) error {
 // mutation.
 func (m *MembershipMutation) ClearedFields() []string {
 	var fields []string
+	if m.FieldCleared(membership.FieldIsPrimary) {
+		fields = append(fields, membership.FieldIsPrimary)
+	}
 	if m.FieldCleared(membership.FieldExpiresAt) {
 		fields = append(fields, membership.FieldExpiresAt)
 	}
@@ -6037,6 +6085,9 @@ func (m *MembershipMutation) FieldCleared(name string) bool {
 // error if the field is not defined in the schema.
 func (m *MembershipMutation) ClearField(name string) error {
 	switch name {
+	case membership.FieldIsPrimary:
+		m.ClearIsPrimary()
+		return nil
 	case membership.FieldExpiresAt:
 		m.ClearExpiresAt()
 		return nil
@@ -6053,6 +6104,9 @@ func (m *MembershipMutation) ResetField(name string) error {
 		return nil
 	case membership.FieldGroupID:
 		m.ResetGroupID()
+		return nil
+	case membership.FieldIsPrimary:
+		m.ResetIsPrimary()
 		return nil
 	case membership.FieldCreatedAt:
 		m.ResetCreatedAt()

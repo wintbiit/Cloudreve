@@ -20,6 +20,11 @@ func GroupID(v int) predicate.Membership {
 	return predicate.Membership(sql.FieldEQ(FieldGroupID, v))
 }
 
+// IsPrimary applies equality check predicate on the "is_primary" field. It's identical to IsPrimaryEQ.
+func IsPrimary(v bool) predicate.Membership {
+	return predicate.Membership(sql.FieldEQ(FieldIsPrimary, v))
+}
+
 // CreatedAt applies equality check predicate on the "created_at" field. It's identical to CreatedAtEQ.
 func CreatedAt(v time.Time) predicate.Membership {
 	return predicate.Membership(sql.FieldEQ(FieldCreatedAt, v))
@@ -68,6 +73,26 @@ func GroupIDIn(vs ...int) predicate.Membership {
 // GroupIDNotIn applies the NotIn predicate on the "group_id" field.
 func GroupIDNotIn(vs ...int) predicate.Membership {
 	return predicate.Membership(sql.FieldNotIn(FieldGroupID, vs...))
+}
+
+// IsPrimaryEQ applies the EQ predicate on the "is_primary" field.
+func IsPrimaryEQ(v bool) predicate.Membership {
+	return predicate.Membership(sql.FieldEQ(FieldIsPrimary, v))
+}
+
+// IsPrimaryNEQ applies the NEQ predicate on the "is_primary" field.
+func IsPrimaryNEQ(v bool) predicate.Membership {
+	return predicate.Membership(sql.FieldNEQ(FieldIsPrimary, v))
+}
+
+// IsPrimaryIsNil applies the IsNil predicate on the "is_primary" field.
+func IsPrimaryIsNil() predicate.Membership {
+	return predicate.Membership(sql.FieldIsNull(FieldIsPrimary))
+}
+
+// IsPrimaryNotNil applies the NotNil predicate on the "is_primary" field.
+func IsPrimaryNotNil() predicate.Membership {
+	return predicate.Membership(sql.FieldNotNull(FieldIsPrimary))
 }
 
 // CreatedAtEQ applies the EQ predicate on the "created_at" field.

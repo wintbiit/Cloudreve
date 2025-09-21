@@ -16,6 +16,8 @@ const (
 	FieldUserID = "user_id"
 	// FieldGroupID holds the string denoting the group_id field in the database.
 	FieldGroupID = "group_id"
+	// FieldIsPrimary holds the string denoting the is_primary field in the database.
+	FieldIsPrimary = "is_primary"
 	// FieldCreatedAt holds the string denoting the created_at field in the database.
 	FieldCreatedAt = "created_at"
 	// FieldExpiresAt holds the string denoting the expires_at field in the database.
@@ -50,6 +52,7 @@ const (
 var Columns = []string{
 	FieldUserID,
 	FieldGroupID,
+	FieldIsPrimary,
 	FieldCreatedAt,
 	FieldExpiresAt,
 }
@@ -65,6 +68,8 @@ func ValidColumn(column string) bool {
 }
 
 var (
+	// DefaultIsPrimary holds the default value on creation for the "is_primary" field.
+	DefaultIsPrimary bool
 	// DefaultCreatedAt holds the default value on creation for the "created_at" field.
 	DefaultCreatedAt func() time.Time
 )
@@ -80,6 +85,11 @@ func ByUserID(opts ...sql.OrderTermOption) OrderOption {
 // ByGroupID orders the results by the group_id field.
 func ByGroupID(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldGroupID, opts...).ToFunc()
+}
+
+// ByIsPrimary orders the results by the is_primary field.
+func ByIsPrimary(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldIsPrimary, opts...).ToFunc()
 }
 
 // ByCreatedAt orders the results by the created_at field.

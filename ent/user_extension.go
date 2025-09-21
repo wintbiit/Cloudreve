@@ -64,6 +64,17 @@ func (u *User) GroupMaxAria2BatchSize() int {
 }
 
 func (u *User) GetPrimaryGroup() *Group {
-	// TODO: design user primary group
-	panic("implement me")
+	g, ok := lo.Find(u.Edges.Membership, func(d *Membership) bool {
+		return d.IsPrimary
+	})
+
+	if ok {
+		return g.Edges.Group
+	}
+
+	if len(u.Edges.Group) > 0 {
+		return u.Edges.Group[0]
+	}
+
+	return nil
 }

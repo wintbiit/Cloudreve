@@ -189,6 +189,7 @@ var (
 	}
 	// MembershipsColumns holds the columns for the "memberships" table.
 	MembershipsColumns = []*schema.Column{
+		{Name: "is_primary", Type: field.TypeBool, Nullable: true, Default: false},
 		{Name: "created_at", Type: field.TypeTime},
 		{Name: "expires_at", Type: field.TypeTime, Nullable: true},
 		{Name: "user_id", Type: field.TypeInt},
@@ -198,17 +199,17 @@ var (
 	MembershipsTable = &schema.Table{
 		Name:       "memberships",
 		Columns:    MembershipsColumns,
-		PrimaryKey: []*schema.Column{MembershipsColumns[3], MembershipsColumns[2]},
+		PrimaryKey: []*schema.Column{MembershipsColumns[4], MembershipsColumns[3]},
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "memberships_users_user",
-				Columns:    []*schema.Column{MembershipsColumns[2]},
+				Columns:    []*schema.Column{MembershipsColumns[3]},
 				RefColumns: []*schema.Column{UsersColumns[0]},
 				OnDelete:   schema.NoAction,
 			},
 			{
 				Symbol:     "memberships_groups_group",
-				Columns:    []*schema.Column{MembershipsColumns[3]},
+				Columns:    []*schema.Column{MembershipsColumns[4]},
 				RefColumns: []*schema.Column{GroupsColumns[0]},
 				OnDelete:   schema.NoAction,
 			},

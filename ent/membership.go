@@ -21,6 +21,8 @@ type Membership struct {
 	UserID int `json:"user_id,omitempty"`
 	// GroupID holds the value of the "group_id" field.
 	GroupID int `json:"group_id,omitempty"`
+	// IsPrimary holds the value of the "is_primary" field.
+	IsPrimary bool `json:"is_primary,omitempty"`
 	// CreatedAt holds the value of the "created_at" field.
 	CreatedAt time.Time `json:"created_at,omitempty"`
 	// ExpiresAt holds the value of the "expires_at" field.
@@ -73,6 +75,8 @@ func (*Membership) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
+		case membership.FieldIsPrimary:
+			values[i] = new(sql.NullBool)
 		case membership.FieldUserID, membership.FieldGroupID:
 			values[i] = new(sql.NullInt64)
 		case membership.FieldCreatedAt, membership.FieldExpiresAt:
@@ -103,6 +107,12 @@ func (m *Membership) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field group_id", values[i])
 			} else if value.Valid {
 				m.GroupID = int(value.Int64)
+			}
+		case membership.FieldIsPrimary:
+			if value, ok := values[i].(*sql.NullBool); !ok {
+				return fmt.Errorf("unexpected type %T for field is_primary", values[i])
+			} else if value.Valid {
+				m.IsPrimary = value.Bool
 			}
 		case membership.FieldCreatedAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {
@@ -167,6 +177,9 @@ func (m *Membership) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("group_id=")
 	builder.WriteString(fmt.Sprintf("%v", m.GroupID))
+	builder.WriteString(", ")
+	builder.WriteString("is_primary=")
+	builder.WriteString(fmt.Sprintf("%v", m.IsPrimary))
 	builder.WriteString(", ")
 	builder.WriteString("created_at=")
 	builder.WriteString(m.CreatedAt.Format(time.ANSIC))

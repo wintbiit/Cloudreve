@@ -133,8 +133,12 @@ func init() {
 	group.DefaultSettings = groupDescSettings.Default.(*types.GroupSetting)
 	membershipFields := schema.Membership{}.Fields()
 	_ = membershipFields
+	// membershipDescIsPrimary is the schema descriptor for is_primary field.
+	membershipDescIsPrimary := membershipFields[2].Descriptor()
+	// membership.DefaultIsPrimary holds the default value on creation for the is_primary field.
+	membership.DefaultIsPrimary = membershipDescIsPrimary.Default.(bool)
 	// membershipDescCreatedAt is the schema descriptor for created_at field.
-	membershipDescCreatedAt := membershipFields[2].Descriptor()
+	membershipDescCreatedAt := membershipFields[3].Descriptor()
 	// membership.DefaultCreatedAt holds the default value on creation for the created_at field.
 	membership.DefaultCreatedAt = membershipDescCreatedAt.Default.(func() time.Time)
 	metadataMixin := schema.Metadata{}.Mixin()

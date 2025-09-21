@@ -58,6 +58,26 @@ func (mu *MembershipUpdate) SetNillableGroupID(i *int) *MembershipUpdate {
 	return mu
 }
 
+// SetIsPrimary sets the "is_primary" field.
+func (mu *MembershipUpdate) SetIsPrimary(b bool) *MembershipUpdate {
+	mu.mutation.SetIsPrimary(b)
+	return mu
+}
+
+// SetNillableIsPrimary sets the "is_primary" field if the given value is not nil.
+func (mu *MembershipUpdate) SetNillableIsPrimary(b *bool) *MembershipUpdate {
+	if b != nil {
+		mu.SetIsPrimary(*b)
+	}
+	return mu
+}
+
+// ClearIsPrimary clears the value of the "is_primary" field.
+func (mu *MembershipUpdate) ClearIsPrimary() *MembershipUpdate {
+	mu.mutation.ClearIsPrimary()
+	return mu
+}
+
 // SetCreatedAt sets the "created_at" field.
 func (mu *MembershipUpdate) SetCreatedAt(t time.Time) *MembershipUpdate {
 	mu.mutation.SetCreatedAt(t)
@@ -168,6 +188,12 @@ func (mu *MembershipUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				ps[i](selector)
 			}
 		}
+	}
+	if value, ok := mu.mutation.IsPrimary(); ok {
+		_spec.SetField(membership.FieldIsPrimary, field.TypeBool, value)
+	}
+	if mu.mutation.IsPrimaryCleared() {
+		_spec.ClearField(membership.FieldIsPrimary, field.TypeBool)
 	}
 	if value, ok := mu.mutation.CreatedAt(); ok {
 		_spec.SetField(membership.FieldCreatedAt, field.TypeTime, value)
@@ -281,6 +307,26 @@ func (muo *MembershipUpdateOne) SetNillableGroupID(i *int) *MembershipUpdateOne 
 	if i != nil {
 		muo.SetGroupID(*i)
 	}
+	return muo
+}
+
+// SetIsPrimary sets the "is_primary" field.
+func (muo *MembershipUpdateOne) SetIsPrimary(b bool) *MembershipUpdateOne {
+	muo.mutation.SetIsPrimary(b)
+	return muo
+}
+
+// SetNillableIsPrimary sets the "is_primary" field if the given value is not nil.
+func (muo *MembershipUpdateOne) SetNillableIsPrimary(b *bool) *MembershipUpdateOne {
+	if b != nil {
+		muo.SetIsPrimary(*b)
+	}
+	return muo
+}
+
+// ClearIsPrimary clears the value of the "is_primary" field.
+func (muo *MembershipUpdateOne) ClearIsPrimary() *MembershipUpdateOne {
+	muo.mutation.ClearIsPrimary()
 	return muo
 }
 
@@ -426,6 +472,12 @@ func (muo *MembershipUpdateOne) sqlSave(ctx context.Context) (_node *Membership,
 				ps[i](selector)
 			}
 		}
+	}
+	if value, ok := muo.mutation.IsPrimary(); ok {
+		_spec.SetField(membership.FieldIsPrimary, field.TypeBool, value)
+	}
+	if muo.mutation.IsPrimaryCleared() {
+		_spec.ClearField(membership.FieldIsPrimary, field.TypeBool)
 	}
 	if value, ok := muo.mutation.CreatedAt(); ok {
 		_spec.SetField(membership.FieldCreatedAt, field.TypeTime, value)

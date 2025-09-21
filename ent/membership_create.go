@@ -36,6 +36,20 @@ func (mc *MembershipCreate) SetGroupID(i int) *MembershipCreate {
 	return mc
 }
 
+// SetIsPrimary sets the "is_primary" field.
+func (mc *MembershipCreate) SetIsPrimary(b bool) *MembershipCreate {
+	mc.mutation.SetIsPrimary(b)
+	return mc
+}
+
+// SetNillableIsPrimary sets the "is_primary" field if the given value is not nil.
+func (mc *MembershipCreate) SetNillableIsPrimary(b *bool) *MembershipCreate {
+	if b != nil {
+		mc.SetIsPrimary(*b)
+	}
+	return mc
+}
+
 // SetCreatedAt sets the "created_at" field.
 func (mc *MembershipCreate) SetCreatedAt(t time.Time) *MembershipCreate {
 	mc.mutation.SetCreatedAt(t)
@@ -109,6 +123,10 @@ func (mc *MembershipCreate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (mc *MembershipCreate) defaults() {
+	if _, ok := mc.mutation.IsPrimary(); !ok {
+		v := membership.DefaultIsPrimary
+		mc.mutation.SetIsPrimary(v)
+	}
 	if _, ok := mc.mutation.CreatedAt(); !ok {
 		v := membership.DefaultCreatedAt()
 		mc.mutation.SetCreatedAt(v)
@@ -156,6 +174,10 @@ func (mc *MembershipCreate) createSpec() (*Membership, *sqlgraph.CreateSpec) {
 	)
 
 	_spec.OnConflict = mc.conflict
+	if value, ok := mc.mutation.IsPrimary(); ok {
+		_spec.SetField(membership.FieldIsPrimary, field.TypeBool, value)
+		_node.IsPrimary = value
+	}
 	if value, ok := mc.mutation.CreatedAt(); ok {
 		_spec.SetField(membership.FieldCreatedAt, field.TypeTime, value)
 		_node.CreatedAt = value
@@ -274,6 +296,24 @@ func (u *MembershipUpsert) UpdateGroupID() *MembershipUpsert {
 	return u
 }
 
+// SetIsPrimary sets the "is_primary" field.
+func (u *MembershipUpsert) SetIsPrimary(v bool) *MembershipUpsert {
+	u.Set(membership.FieldIsPrimary, v)
+	return u
+}
+
+// UpdateIsPrimary sets the "is_primary" field to the value that was provided on create.
+func (u *MembershipUpsert) UpdateIsPrimary() *MembershipUpsert {
+	u.SetExcluded(membership.FieldIsPrimary)
+	return u
+}
+
+// ClearIsPrimary clears the value of the "is_primary" field.
+func (u *MembershipUpsert) ClearIsPrimary() *MembershipUpsert {
+	u.SetNull(membership.FieldIsPrimary)
+	return u
+}
+
 // SetCreatedAt sets the "created_at" field.
 func (u *MembershipUpsert) SetCreatedAt(v time.Time) *MembershipUpsert {
 	u.Set(membership.FieldCreatedAt, v)
@@ -369,6 +409,27 @@ func (u *MembershipUpsertOne) SetGroupID(v int) *MembershipUpsertOne {
 func (u *MembershipUpsertOne) UpdateGroupID() *MembershipUpsertOne {
 	return u.Update(func(s *MembershipUpsert) {
 		s.UpdateGroupID()
+	})
+}
+
+// SetIsPrimary sets the "is_primary" field.
+func (u *MembershipUpsertOne) SetIsPrimary(v bool) *MembershipUpsertOne {
+	return u.Update(func(s *MembershipUpsert) {
+		s.SetIsPrimary(v)
+	})
+}
+
+// UpdateIsPrimary sets the "is_primary" field to the value that was provided on create.
+func (u *MembershipUpsertOne) UpdateIsPrimary() *MembershipUpsertOne {
+	return u.Update(func(s *MembershipUpsert) {
+		s.UpdateIsPrimary()
+	})
+}
+
+// ClearIsPrimary clears the value of the "is_primary" field.
+func (u *MembershipUpsertOne) ClearIsPrimary() *MembershipUpsertOne {
+	return u.Update(func(s *MembershipUpsert) {
+		s.ClearIsPrimary()
 	})
 }
 
@@ -613,6 +674,27 @@ func (u *MembershipUpsertBulk) SetGroupID(v int) *MembershipUpsertBulk {
 func (u *MembershipUpsertBulk) UpdateGroupID() *MembershipUpsertBulk {
 	return u.Update(func(s *MembershipUpsert) {
 		s.UpdateGroupID()
+	})
+}
+
+// SetIsPrimary sets the "is_primary" field.
+func (u *MembershipUpsertBulk) SetIsPrimary(v bool) *MembershipUpsertBulk {
+	return u.Update(func(s *MembershipUpsert) {
+		s.SetIsPrimary(v)
+	})
+}
+
+// UpdateIsPrimary sets the "is_primary" field to the value that was provided on create.
+func (u *MembershipUpsertBulk) UpdateIsPrimary() *MembershipUpsertBulk {
+	return u.Update(func(s *MembershipUpsert) {
+		s.UpdateIsPrimary()
+	})
+}
+
+// ClearIsPrimary clears the value of the "is_primary" field.
+func (u *MembershipUpsertBulk) ClearIsPrimary() *MembershipUpsertBulk {
+	return u.Update(func(s *MembershipUpsert) {
+		s.ClearIsPrimary()
 	})
 }
 
